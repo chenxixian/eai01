@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC
+        "-//SPRING//DTD BEAN//EN"
+        "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	
+	<bean id="taskManager" parent="abstractCoreinfoTransactionProxy">
+		<property name="target">
+			<bean class="com.vtradex.server.service.task.pojo.DefaultTaskManager" parent="baseManager">
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="messageManager" parent="abstractCoreinfoTransactionProxy">
+		<property name="target">
+			<bean class="com.vtradex.server.service.message.pojo.DefaultMessageManager" parent="baseManager">
+				<property name="taskManager">
+					<ref bean="taskManager"></ref>
+				</property>
+			</bean>
+		</property>
+	</bean> 
+    
+    <bean id="abstractCoreinfoTransactionProxy" abstract="true"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref bean="coreinfoTransactionManager"/>
+        </property>
+        <property name="transactionAttributeSource">
+            <bean class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource"/>
+        </property>
+    </bean>     
+
+	<bean id="coreinfoTransactionManager"
+        class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory">
+            <ref bean="sessionFactory"/>
+        </property>
+    </bean>  
+	 
+	<!--下线车处理-->
+	<bean id="vehicleOfflineManager" parent="abstractTransactionProxy">
+        <property name="target">
+            <bean class="com.vtradex.swms.server.service.webservice.pojo.DefaultVehicleOfflineManager" parent="baseManager">
+				<constructor-arg index="0">
+					<ref bean="bussinessCodeManager"/>
+				</constructor-arg>
+			</bean>
+        </property>
+	</bean>
+	
+	<!--颜色同步-->
+	<bean id="syncVhColorManager" parent="abstractCoreinfoTransactionProxy">
+		<property name="target">
+			<bean class="com.vtradex.swms.server.service.webservice.pojo.DefaultSyncVhColorManager" parent="baseManager">
+			</bean>
+		</property>
+	</bean>
+	
+	<!--车型同步-->
+	<bean id="syncVhModelManager" parent="abstractCoreinfoTransactionProxy">
+		<property name="target">
+			<bean class="com.vtradex.swms.server.service.webservice.pojo.DefaultSyncVhModelManager" parent="baseManager">
+			</bean>
+		</property>
+	</bean>
+	
+	<!--合格证同步-->
+	<bean id="syncVhCertificateManager" parent="abstractCoreinfoTransactionProxy">
+		<property name="target">
+			<bean class="com.vtradex.swms.server.service.webservice.pojo.DefaultSyncVhCertificateManager" parent="baseManager">
+			</bean>
+		</property>
+	</bean>
+	
+	<!--供应商同步-->
+	<bean id="syncRetailerManager" parent="abstractCoreinfoTransactionProxy">
+		<property name="target">
+			<bean class="com.vtradex.swms.server.service.webservice.pojo.DefaultSyncRetailerManager" parent="baseManager">
+			</bean>
+		</property>
+	</bean>
+	
+	<!--订单接收-->
+	<bean id="sendOrderManager" parent="abstractCoreinfoTransactionProxy">
+		<property name="target">
+			<bean class="com.vtradex.swms.server.service.webservice.pojo.DefaultSendOrderManager" parent="baseManager">
+				<constructor-arg index="0">
+					<ref bean="bussinessCodeManager"/>
+				</constructor-arg>
+				<constructor-arg index="1">
+					<ref bean="interfaceLogManager"></ref>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+	
+	<!--部份返回结果集-->
+	<bean id="interfaceDAOManager" parent="abstractCoreinfoTransactionProxy">
+		<property name="target">
+			<bean class="com.vtradex.swms.server.dao.pojo.DefaultInterfaceDAOManager" parent="baseManager">
+			</bean>
+		</property>
+	</bean>
+	
+	<!--下线车返回-->
+	<bean id="responseVehicleOfflineManager" parent="abstractCoreinfoTransactionProxy">
+		<property name="target">
+			<bean class="com.vtradex.swms.server.service.webservice.pojo.DefaultResponseVehicleOfflineManager" parent="baseManager">
+				<constructor-arg index="0">
+					<ref bean="interfaceDAOManager"/>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+	
+	<!--调度结果返回和取消调度结果返回处理接口-->
+	<bean id="dispatchReturnManager" parent="abstractCoreinfoTransactionProxy">
+		<property name="target">
+			<bean class="com.vtradex.swms.server.service.webservice.pojo.DefaultDispatchReturnManager" parent="baseManager">
+				<constructor-arg index="0">
+					<ref bean="interfaceDAOManager"/>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+	
+	<!--接口处理-->
+	<bean id="webserviceSupportManager" parent="abstractCoreinfoTransactionProxy">
+		<property name="target">
+			<bean class="com.vtradex.swms.server.service.webservice.pojo.DefaultWebserviceSupportManager" parent="baseManager">
+				<constructor-arg index="0">
+					<ref bean="vehicleOfflineManager"/>
+				</constructor-arg>
+				<constructor-arg index="1">
+					<ref bean="syncVhColorManager"/>
+				</constructor-arg>
+				<constructor-arg index="2">
+					<ref bean="syncVhModelManager"/>
+				</constructor-arg>
+				<constructor-arg index="3">
+					<ref bean="syncVhCertificateManager"/>
+				</constructor-arg>
+				<constructor-arg index="4">
+					<ref bean="syncRetailerManager"/>
+				</constructor-arg>
+				<constructor-arg index="5">
+					<ref bean="sendOrderManager"/>
+				</constructor-arg>
+				<constructor-arg index="6">
+					<ref bean="responseVehicleOfflineManager"/>
+				</constructor-arg>
+				<constructor-arg index="7">
+					<ref bean="interfaceLogManager"/>
+				</constructor-arg>
+				<constructor-arg index="8">
+					<ref bean="dispatchReturnManager"/>
+				</constructor-arg>
+				<constructor-arg index="9">
+					<ref bean="bussinessLogManager"/>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="interfaceLogManager" parent="abstractCoreinfoTransactionProxy">
+		<property name="target">
+			<bean class="com.vtradex.swms.server.service.interfaceLog.pojo.DefaultInterfaceLogManager" parent="baseManager">
+				<constructor-arg index="0">
+					<ref bean="taskManager"/>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="bussinessLogManager" parent="abstractCoreinfoTransactionProxy">
+		<property name="target">
+			<bean class="com.vtradex.swms.server.service.bussinessLog.pojo.DefaultBussinessLogManager" parent="baseManager">
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="interfaceLogSupportManager" parent="abstractCoreinfoTransactionProxy">
+		<property name="target">
+			<bean class="com.vtradex.swms.server.service.interfaceLog.pojo.DefaultInterfaceLogSupportManager" parent="baseManager">
+				<constructor-arg index="0">
+					<ref bean="interfaceLogManager"/>
+				</constructor-arg>
+				<constructor-arg index="1">
+					<ref bean="interfaceDAOManager"/>
+				</constructor-arg>
+				<constructor-arg index="2">
+					<ref bean="bussinessLogManager"/>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+	
+	<!--发送信息到webservice接口-->
+	
+	<bean id="misExt_AutoTrans" class="com.webmethods.www.MISExtToSAP_AutoTrans_QDServiceLocator">
+		<property name="MISExtToSAP_AutoTrans_QDPort0_address">
+			<value>http://172.16.1.70:8888/soap/rpc</value>
+		</property>
+	</bean>
+	<bean id="mse_roieService" class="com.webmethods.www.MSE_ROIEServiceLocator">
+		<property name="MSE_ROIEPort0_address">
+			<value>http://172.16.1.70:8888/soap/rpc</value>
+		</property>
+	</bean>
+	
+	<bean id="misExtToAnJi_ShippingOrderService" class="com.webmethods.www.MISExtToAnJi_ShippingOrderServiceLocator">
+         <property name="MISExtToAnJi_ShippingOrderPort0_address">
+            <value>http://172.16.1.70:8888/soap/rpc</value>
+         </property>
+    </bean>
+	
+	<bean id="misExt_DispatchGR_PubService" class="com.webmethods.www.MISExt_DispatchGR_PubServiceLocator">
+         <property name="MISExt_DispatchGR_PubPort0_address">
+            <value>http://172.16.1.70:8888/soap/rpc</value>
+         </property>
+    </bean>
+	
+<!--中间件新URL地址-->
+	<bean id="mse_roieInstructionService" class="com.webmethods.www.MISExtToSAP_InstructionResultsServiceLocator">
+		<property name="MISExtToSAP_InstructionResultsPort0_address">
+			<value>http://172.16.1.70:8888/soap/rpc</value>
+		</property>
+	</bean>
+
+
+	<bean id="ediSendManager" parent="abstractCoreinfoTransactionProxy">
+		<property name="target">
+			<bean class="com.vtradex.swms.server.service.send.pojo.DefaultEdiSendManager" parent="baseManager">
+				<constructor-arg index="0">
+					<ref bean="mse_roieService"/>
+				</constructor-arg>
+				<constructor-arg index="1">
+					<ref bean="misExtToAnJi_ShippingOrderService"/>
+				</constructor-arg>
+				<constructor-arg index="2">
+					<ref bean="interfaceDAOManager"/>
+				</constructor-arg>
+				<constructor-arg index="3">
+					<ref bean="bussinessLogManager"/>
+				</constructor-arg>
+				<constructor-arg index="4">
+					<ref bean="misExt_AutoTrans"/>
+				</constructor-arg>
+				<constructor-arg index="5">
+					<ref bean="misExt_DispatchGR_PubService"/>
+				</constructor-arg>
+<!--中间件新URL地址-->
+				<constructor-arg index="6">
+					<ref bean="mse_roieInstructionService"/>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+	<bean class="com.vtradex.server.edi.EdiServerFactory"/>
+</beans>
