@@ -201,31 +201,31 @@
 	
 	<bean id="misExt_AutoTrans" class="com.webmethods.www.MISExtToSAP_AutoTrans_QDServiceLocator">
 		<property name="MISExtToSAP_AutoTrans_QDPort0_address">
-			<value>http://172.16.1.70:8888/soap/rpc</value>
+			<value>http://10.2.12.19:8888/soap/rpc</value>
 		</property>
 	</bean>
 	<bean id="mse_roieService" class="com.webmethods.www.MSE_ROIEServiceLocator">
 		<property name="MSE_ROIEPort0_address">
-			<value>http://172.16.1.70:8888/soap/rpc</value>
+			<value>http://10.2.12.19:8888/soap/rpc</value>
 		</property>
 	</bean>
 	
 	<bean id="misExtToAnJi_ShippingOrderService" class="com.webmethods.www.MISExtToAnJi_ShippingOrderServiceLocator">
          <property name="MISExtToAnJi_ShippingOrderPort0_address">
-            <value>http://172.16.1.70:8888/soap/rpc</value>
+            <value>http://10.2.12.19:8888/soap/rpc</value>
          </property>
     </bean>
 	
 	<bean id="misExt_DispatchGR_PubService" class="com.webmethods.www.MISExt_DispatchGR_PubServiceLocator">
          <property name="MISExt_DispatchGR_PubPort0_address">
-            <value>http://172.16.1.70:8888/soap/rpc</value>
+            <value>http://10.2.12.19:8888/soap/rpc</value>
          </property>
     </bean>
 	
 <!--中间件新URL地址-->
 	<bean id="mse_roieInstructionService" class="com.webmethods.www.MISExtToSAP_InstructionResultsServiceLocator">
 		<property name="MISExtToSAP_InstructionResultsPort0_address">
-			<value>http://172.16.1.70:8888/soap/rpc</value>
+			<value>http://10.2.12.19:8888/soap/rpc</value>
 		</property>
 	</bean>
 
